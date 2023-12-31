@@ -63,7 +63,7 @@ Feel free to contribute by opening issues or submitting pull requests. Follow th
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [The Unilicense](LICENSE).
 
 ## Acknowledgements
 
