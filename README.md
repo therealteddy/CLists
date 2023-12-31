@@ -65,7 +65,7 @@ Feel free to contribute by opening issues or submitting pull requests. Follow th
 
 This project is licensed under the [MIT License](LICENSE).
 
-# Acknowledgements
+## Acknowledgements
 
 Thank you Jesus for helping me finish this project. 
 
