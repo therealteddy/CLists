@@ -57,6 +57,10 @@ Counts the number of nodes in the list, starting from the specified node.
 
 Inserts a new node with the given data at the specified position in the linked list.
 
+### `void list_print_nodes(node_t* cnode, printcallback_t printnode_callback)` 
+
+Print nodes after cnode in the list.
+
 ## Contributing
 
 Feel free to contribute by opening issues or submitting pull requests. Follow the [Contributing Guidelines](CONTRIBUTING.md) for more details.
