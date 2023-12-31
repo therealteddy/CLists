@@ -18,6 +18,8 @@ struct node {
 };
 typedef struct node node_t; 
 
+typedef void (*printcallback_t)(void*);
+
 /// @brief Create a singly linked list
 /// @param nnode Number of nodes in the list
 /// @return Return the head of the list
@@ -180,4 +182,14 @@ node_t* list_insert_node(node_t** head, void* userdata, unsigned int list_type, 
     return nwnode;
 }
 
+/// @brief Prints the data within linked
+/// @param cnode The current node to print after
+/// @param printnode_callback A callbeck function to print the data of a node
+void list_print_nodes(node_t* cnode, printcallback_t printnode_callback) {
+    unsigned int nnode = list_count_nodes(cnode); 
+    for (int i = 0; i < nnode; ++i) {
+        printnode_callback(cnode->data); 
+        cnode = cnode->next;    
+    }
+}
 #endif//LISTS_H
