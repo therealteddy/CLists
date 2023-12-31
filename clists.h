@@ -125,7 +125,7 @@ unsigned int list_count_nodes(node_t* cnode) {
 /// @param pnode The position of the node in the linked list (lists start at 1)
 /// @return Returns a pointer to the added node
 node_t* list_insert_node(node_t** head, void* userdata, unsigned int list_type, signed int pnode){ 
-    node_t* nwnode = malloc(sizeof(node_t)); 
+    node_t* nwnode = (node_t*) malloc(sizeof(node_t)); 
     unsigned int nnode = list_count_nodes(*head);
 
     nwnode->data = userdata; 
