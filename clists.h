@@ -89,10 +89,19 @@ node_t* new_circular_dlist(unsigned int nnode) {
 /// @param head The memory address of head
 /// @param pnode The position of the node within the list (lists start at 1)
 /// @return Returns a pointer to the retrieved node
-node_t* list_get_node(node_t** head, unsigned int pnode) {
-    node_t* node = (*head); 
+node_t* list_get_node(node_t* head, unsigned int pnode) {
+    node_t* node = (head); 
     for (int i = 0; i < (pnode-1); ++i) node = node->next; 
     return node;
+}
+
+/// @brief Get the last node of a linked list
+/// @param head The first node in the list
+/// @return Returns the last node
+node_t* list_get_tail(node_t* head) {
+    node_t* tail;
+    for (tail = head; (tail->next) && (tail->next != head); tail = tail->next);
+    return tail;  
 }
 
 /// @brief Sets data at a specific node
@@ -102,7 +111,7 @@ node_t* list_get_node(node_t** head, unsigned int pnode) {
 /// @return Returns a pointer to the node where data was set
 node_t* list_set_data(node_t** head, void* userdata, unsigned int pnode) {
     node_t* node;
-    if (!(node = list_get_node(head, pnode))) {
+    if (!(node = list_get_node(*head, pnode))) {
         fprintf(stderr, "%s %d: Node does not exist at %d\n", __FILE__, __LINE__, pnode); 
         abort();
     }
@@ -118,68 +127,6 @@ unsigned int list_count_nodes(node_t* cnode) {
     unsigned int nnode = 0; 
     for (nnode = !(node) ? 0: 1; (node = node->next) && (node != cnode); nnode++);
     return nnode;
-}
-
-/// @brief Inserts a node at a given location
-/// @param head Pointer to the first node in the list
-/// @param userdata Data the user wishes to add to the new node; it could be any pointer to data structure
-/// @param list_type The type of list - SINGLY_LINKED or DOUBLY_LINKED
-/// @param pnode The position of the node in the linked list (lists start at 1)
-/// @return Returns a pointer to the added node
-node_t* list_insert_node(node_t** head, void* userdata, unsigned int list_type, signed int pnode){ 
-    node_t* nwnode = (node_t*) malloc(sizeof(node_t)); 
-    unsigned int nnode = list_count_nodes(*head);
-
-    nwnode->data = userdata; 
-    nwnode->type = (pnode <= 1) ? NODE_HEAD : (pnode > nnode) ? NODE_TAIL : NODE_BODY;
-
-    switch (list_type)
-    {
-    case (LINEAR_SINGLY_LINKED): 
-        nwnode->next = (pnode > nnode) ? NULL : (pnode <= 1) ? (*head) : (*head+(pnode-1));
-        nwnode->prev = NULL;
-        if (nwnode->type == NODE_BODY) (*head+(pnode-2))->next = nwnode; 
-        else if (nwnode->type == NODE_TAIL) (*head+(nnode-1))->next = nwnode;
-        break;
-
-    case (CIRCULAR_SINGLY_LINKED): 
-        nwnode->next = (pnode > nnode || pnode <= 1) ? (*head) : (*head+(pnode-1));
-        nwnode->prev = NULL;
-        if (nwnode->type == NODE_BODY) (*head+(pnode-2))->next = nwnode; 
-        else if (nwnode->type == NODE_TAIL || nwnode->type == NODE_HEAD) (*head+(nnode-1))->next = nwnode;
-        break;
-
-    case (LINEAR_DOUBLY_LINKED): 
-        // Singly linked 
-        nwnode->next = (pnode > nnode) ? NULL : (pnode <= 1) ? (*head) : (*head+(pnode-1));
-        if (nwnode->type == NODE_BODY) (*head+(pnode-2))->next = nwnode; 
-        else if (nwnode->type == NODE_TAIL) (*head+(nnode-1))->next = nwnode;
-
-        // Doubly linked 
-        nwnode->prev = (pnode > nnode) ? (*head+(nnode-1)) : (pnode <= 1) ? NULL : (*head+(pnode-2)); 
-        if (nwnode->type == NODE_BODY) (*head+(pnode-1))->prev = nwnode; 
-        else if (nwnode->type == NODE_HEAD) (*head)->prev = nwnode;
-        break;
-
-    case (CIRCULAR_DOUBLY_LINKED): 
-        // Circular singly linked 
-        nwnode->next = (pnode > nnode) ? (*head) : (pnode <= 1) ? (*head) : (*head+(pnode-1));
-        if (nwnode->type == NODE_BODY) (*head+(pnode-2))->next = nwnode; 
-        else if (nwnode->type == NODE_TAIL || nwnode->type == NODE_HEAD) (*head+(nnode-1))->next = nwnode;
-        
-        // Circular doubly linked 
-        nwnode->prev = (pnode > nnode) ? (*head+(nnode-1)) : (pnode <= 1) ? nwnode->prev = (*head+(nnode-1)) : (*head+(pnode-2)); 
-        if (nwnode->type == NODE_BODY) (*head+(pnode-1))->prev = nwnode; 
-        else if (nwnode->type == NODE_HEAD || nwnode->type == NODE_TAIL) (*head)->prev = nwnode;
-        break;
-
-    default:
-        fprintf(stderr, "%s %d: Invalid list type!\n", __FILE__, __LINE__);
-        abort();
-        break;
-    }
-
-    return nwnode;
 }
 
 /// @brief Prints the data within linked
