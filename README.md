@@ -25,21 +25,9 @@ The library supports the following types of linked lists:
 
 ## Functions
 
-### `node_t* new_slist(unsigned int nnode)`
+### `node_t* new_linked_list(unsigned int nnode, unsigned int ltype)` 
 
-Creates a new linear singly linked list with the specified number of nodes.
-
-### `node_t* new_circular_slist(unsigned int nnode)`
-
-Creates a new circular singly linked list with the specified number of nodes.
-
-### `node_t* new_dlist(unsigned int nnode)`
-
-Creates a new linear doubly linked list with the specified number of nodes.
-
-### `node_t* new_circular_dlist(unsigned int nnode)`
-
-Creates a new circular doubly linked list with the specified number of nodes.
+Create a new linked list
 
 ### `node_t* list_get_node(node_t** head, unsigned int pnode)`
 
@@ -52,10 +40,6 @@ Sets data at a specific node in the list.
 ### `unsigned int list_count_nodes(node_t* cnode)`
 
 Counts the number of nodes in the list, starting from the specified node.
-
-### `node_t* list_insert_node(node_t** head, void* userdata, unsigned int list_type, signed int pnode)`
-
-Inserts a new node with the given data at the specified position in the linked list.
 
 ### `void list_print_nodes(node_t* cnode, printcallback_t printnode_callback)` 
 

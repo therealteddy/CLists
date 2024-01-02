@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #define freelist(head) free(head)
+#define freenode(node) free(node)
 
 enum node_types {
     NODE_HEAD, 
@@ -163,11 +164,11 @@ node_t* new_linked_list(unsigned int nnode, unsigned int ltype) {
         break; 
 
     case CIRCULAR_SINGLY_LINKED: 
-        //return new_circular_slist(nnode); 
+        return new_circular_slist(nnode); 
         break; 
 
     case CIRCULAR_DOUBLY_LINKED: 
-        //return new_circular_dlist(nnode); 
+        return new_circular_dlist(nnode); 
         break; 
     
     default:
@@ -188,5 +189,4 @@ void list_print_nodedata(node_t* cnode, printcallback_t printnode_callback) {
         cnode = cnode->next;    
     }
 }
-
 #endif//LISTS_H

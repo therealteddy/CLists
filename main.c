@@ -1,12 +1,9 @@
 #include "clists.h" 
 int main() {
-    node_t* head = new_circular_slist(3);
-    list_set_data(head, "Yo", 1); 
-    list_set_data(head, "Duuududud", 2); 
-    list_set_data(head, "Na!", 3);
-    for (int i = 0; i < 6; ++i) {
-        puts(head->data); 
-        head = head->next;
-    } 
+    node_t* head = new_linked_list(3, LINEAR_SINGLY_LINKED); 
+    list_set_data(head, "Hello!", 2); 
+    printf("%u\n", list_count_nodes(head)); 
+    list_delete_node(head, 2, LINEAR_SINGLY_LINKED); 
+    printf("%u\n", list_count_nodes(head));
     freelist(head);
 }
