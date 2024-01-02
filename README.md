@@ -41,6 +41,10 @@ Sets data at a specific node in the list.
 
 Counts the number of nodes in the list, starting from the specified node.
 
+### `node_t* list_get_tail(node_t* head)`
+
+Get the last node of a linked list
+
 ### `void list_print_nodes(node_t* cnode, printcallback_t printnode_callback)` 
 
 Print nodes after cnode in the list.
