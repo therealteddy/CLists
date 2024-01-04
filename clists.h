@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define freelist(head) free(head)
-#define freenode(node) free(node)
+#define freenode(node_) free(node_)
 
 enum node_types {
     NODE_HEAD, 
@@ -15,11 +15,18 @@ enum node_types {
 };
 
 enum list_types {
-    LINEAR_SINGLY_LINKED,
-    LINEAR_DOUBLY_LINKED,
-    CIRCULAR_SINGLY_LINKED, 
-    CIRCULAR_DOUBLY_LINKED
+    LINEAR_SINGLY_LINKED_LIST,
+    LINEAR_DOUBLY_LINKED_LIST,
+    CIRCULAR_SINGLY_LINKED_LIST, 
+    CIRCULAR_DOUBLY_LINKED_LIST
 };
+
+enum zip_types {
+    ZIP_LINEAR_SINGLY_LINKED_LISTS,
+    ZIP_LINEAR_DOUBLY_LINKED_LISTS, 
+    ZIP_CIRCULAR_SINGLY_LINKED_LISTS, 
+    ZIP_CIRCULAR_DOUBLY_LINKED_LISTS
+}; 
 
 struct node {
     void* data; 
@@ -56,6 +63,7 @@ node_t* list_get_node(node_t* head, unsigned int pnode) {
     for (int i = 0; i++ < pnode-1; head = head->next); 
     return head;
 }
+
 
 /// @brief Sets data of a specific node 
 /// @param head The first node of the list 
@@ -155,19 +163,19 @@ node_t* new_circular_dlist(unsigned int nnode) {
 node_t* new_linked_list(unsigned int nnode, unsigned int ltype) {
     switch (ltype)
     {
-    case LINEAR_SINGLY_LINKED: 
+    case LINEAR_SINGLY_LINKED_LIST: 
         return new_slist(nnode); 
         break;
     
-    case LINEAR_DOUBLY_LINKED: 
+    case LINEAR_DOUBLY_LINKED_LIST: 
         return new_dlist(nnode); 
         break; 
 
-    case CIRCULAR_SINGLY_LINKED: 
+    case CIRCULAR_SINGLY_LINKED_LIST: 
         return new_circular_slist(nnode); 
         break; 
 
-    case CIRCULAR_DOUBLY_LINKED: 
+    case CIRCULAR_DOUBLY_LINKED_LIST: 
         return new_circular_dlist(nnode); 
         break; 
     
@@ -182,11 +190,101 @@ node_t* new_linked_list(unsigned int nnode, unsigned int ltype) {
 /// @param cnode The current node to print after
 /// @param printnode_callback A callbeck function to print the data of a node
 void list_print_nodedata(node_t* cnode, printcallback_t printnode_callback) {
-    if (!cnode) fprintf(stderr, "%s %d: Node does not exist!\n", __FILE__, __LINE__);
-    unsigned int nnode = list_count_nodes(cnode); 
-    for (int i = 0; i < nnode; ++i) {
-        printnode_callback(cnode->data); 
-        cnode = cnode->next;    
+    if (!cnode) {
+        fprintf(stderr, "%s %d: List Doesn't exist!!\n", __FILE__, __LINE__);
+        abort();
+    }
+    unsigned int nnode = list_count_nodes(cnode);
+    for (int i = 0; (i++ < nnode); cnode = cnode->next) if (cnode->data) printnode_callback(cnode->data); 
+}
+
+/// @brief zip two linear singly linked list togther
+/// @param xlist The list whose end ylist will append to
+/// @param ylist The list which will be attached to the end of xlist 
+/// @returns The head node to the new list
+node_t* slist_zip(node_t* xlist, node_t* ylist) {
+    node_t* xlist_tail = list_get_tail(xlist); 
+    xlist_tail->next = ylist;
+    xlist_tail->type = NODE_BODY;
+    ylist->type = NODE_BODY; 
+    return xlist;
+}
+
+/// @brief zip two linear doubly linked list togther
+/// @param xlist The list whose end ylist will append to
+/// @param ylist The list which will be attached to the end of xlist
+/// @returns The head node of the new list 
+node_t* dlist_zip(node_t* xlist, node_t* ylist) {
+    node_t* xlist_tail = list_get_tail(xlist); 
+    xlist_tail->next = ylist; 
+    ylist->prev = xlist_tail;
+    xlist_tail->type = NODE_BODY;
+    ylist->type = NODE_BODY; 
+    return xlist;
+}
+
+/// @brief zip two circular singly linked list togther
+/// @param xlist The list whose end ylist will append to
+/// @param ylist The list which will be attached to the end of xlist 
+/// @returns The head node of the new list 
+node_t* circular_slist_zip(node_t* xlist, node_t* ylist) {
+    node_t* xlist_tail = list_get_tail(xlist); 
+    xlist_tail->next = ylist; 
+
+    node_t* ylist_tail = list_get_tail(ylist); 
+    ylist_tail->next = xlist;
+
+    ylist->type = NODE_BODY;
+    xlist_tail->type = NODE_BODY;
+
+    return xlist;
+}
+
+/// @brief zip two circular doubly linked list togther
+/// @param xlist The list whose end ylist will append to
+/// @param ylist The list which will be attached to the end of xlist 
+/// @returns The head node of the new list 
+node_t* circular_dlist_zip(node_t* xlist, node_t* ylist) {
+    node_t* xlist_tail = list_get_tail(xlist); 
+    xlist_tail->next = ylist; 
+
+    node_t* ylist_tail = list_get_tail(ylist); 
+    ylist_tail->next = xlist;
+
+    ylist->prev = xlist_tail; 
+    xlist->prev = ylist_tail;
+
+    return xlist;
+}
+
+/// @brief zip two linked lists togther
+/// @param x_list The list whose end ylist will append to
+/// @param y_list The list which will be attached to the end of xlist 
+/// @param ziptype The type of zipping to perform
+/// @returns The head node of the new list 
+node_t* list_zip(node_t* x_list, node_t* y_list, unsigned int ziptype) {
+    switch (ziptype)
+    {
+    case ZIP_LINEAR_SINGLY_LINKED_LISTS: 
+        return slist_zip(x_list, y_list); 
+        break;
+
+    case ZIP_LINEAR_DOUBLY_LINKED_LISTS: 
+        return dlist_zip(x_list, y_list); 
+        break; 
+
+    case ZIP_CIRCULAR_SINGLY_LINKED_LISTS: 
+        return circular_slist_zip(x_list, y_list); 
+        break;
+
+    case ZIP_CIRCULAR_DOUBLY_LINKED_LISTS: 
+        return circular_dlist_zip(x_list, y_list); 
+        break;
+    
+    default:
+        fprintf(stderr, "%s %d: Invalid zip type!\n", __FILE__, __LINE__); 
+        return NULL;
+        break;
     }
 }
 #endif//LISTS_H
