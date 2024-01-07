@@ -287,4 +287,5 @@ node_t* list_zip(node_t* x_list, node_t* y_list, unsigned int ziptype) {
         break;
     }
 }
+
 #endif//LISTS_H

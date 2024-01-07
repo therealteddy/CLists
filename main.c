@@ -6,8 +6,9 @@ void printcallback(void* data) {
 }
 
 int main() {
-    node_t* head = new_linked_list(10, LINEAR_SINGLY_LINKED_LIST); 
-    printf("%u\n", list_count_nodes(head)); 
-    node_t* reverse_head = slist_reverse(head); 
-    freelist(reverse_head);
+    node_t* head = new_slist(10); 
+    list_set_data(head, "world!", 1); 
+    list_set_data(head, "hello, ", 10);
+    node_t* rhead = slist_reverse(head);
+    freelist(rhead); 
 }

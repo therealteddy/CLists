@@ -45,6 +45,10 @@ Counts the number of nodes in the list, starting from the specified node.
 
 Get the last node of a linked list
 
+### `node_t* list_zip(node_t* x_list, node_t* y_list, unsigned int ziptype)`
+
+Zip two linkd lists together.
+
 ### `void list_print_nodes(node_t* cnode, printcallback_t printnode_callback)` 
 
 Print nodes after cnode in the list.
@@ -57,7 +61,7 @@ Feel free to contribute by opening issues or submitting pull requests. Follow th
 
 This project is licensed under the [The Unlicense](LICENSE).
 
-## Acknowledgements
+## Thanks!
 
 Thank you Jesus for helping me finish this project. 
 
